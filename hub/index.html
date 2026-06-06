@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>02809-Core of Potato v1.0.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hub.css">
+</head>
+<body>
+  <div class="hub-layout">
+
+    <!-- HEADER -->
+    <div class="hub-header">
+      <div class="hub-brand">
+        <span class="hub-icon">⚙️</span>
+        <div class="hub-title-wrapper">
+          <h1 class="hub-title">02809-Core of Potato</h1>
+          <span class="hub-version">v1.0.0</span>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button id="btn-headless" class="btn-sm">👁 Show Browser: ON</button>
+        <div id="conn-badge" class="conn-badge">
+          <span id="conn-dot" class="conn-dot"></span>
+          <span id="conn-text">Disconnected</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- SIDEBAR (LEFT) -->
+      <aside class="dashboard-sidebar">
+        <!-- STATUS BAR -->
+        <div class="status-bar">
+          <div class="sb-item"><span class="sb-label">Slots</span><span id="sb-slots" class="sb-value">—</span></div>
+          <div class="sb-item"><span class="sb-label">Active</span><span id="sb-active" class="sb-value">0/0</span></div>
+          <div class="sb-item"><span class="sb-label">Uptime</span><span id="sb-uptime" class="sb-value">—</span></div>
+        </div>
+
+        <!-- WORKER CONFIG -->
+        <div class="config-panel">
+          <div class="section-title">⚙️ Launch Workers</div>
+          <div class="config-controls">
+            <div class="control-group">
+              <label for="cfg-grok">Grok</label>
+              <input type="number" id="cfg-grok" min="0" max="10" value="3">
+            </div>
+            <div class="control-group">
+              <label for="cfg-gemini">Gemini</label>
+              <input type="number" id="cfg-gemini" min="0" max="10" value="1">
+            </div>
+            <div class="control-group">
+              <label for="cfg-chatgpt">ChatGPT</label>
+              <input type="number" id="cfg-chatgpt" min="0" max="10" value="2">
+            </div>
+            <button class="btn-primary" id="btn-launch">🚀 Load Workers</button>
+          </div>
+        </div>
+
+        <!-- DEFAULT URL EDITOR -->
+        <div class="url-editor-panel">
+          <div class="section-title">🔗 Default URLs</div>
+          <div class="url-editor-col">
+            <div class="input-row">
+              <label for="url-grok">Grok</label>
+              <input type="text" id="url-grok" class="url-input" placeholder="https://grok.com" value="https://grok.com">
+            </div>
+            <div class="input-row">
+              <label for="url-gemini">Gemini</label>
+              <input type="text" id="url-gemini" class="url-input" placeholder="https://gemini.google.com/app" value="https://gemini.google.com/app">
+            </div>
+            <div class="input-row">
+              <label for="url-chatgpt">ChatGPT</label>
+              <input type="text" id="url-chatgpt" class="url-input" placeholder="https://chatgpt.com" value="https://chatgpt.com">
+            </div>
+            <button class="btn-sm" id="btn-save-urls">💾 Save Default URLs</button>
+          </div>
+        </div>
+
+        <!-- URL MANAGEMENT -->
+        <div class="url-mgmt-panel">
+          <div class="section-title">🗑 URL Management <small>(per Job Key)</small></div>
+          <div class="url-mgmt-col">
+            <div class="input-row">
+              <label for="mgmt-key">Module Key</label>
+              <input type="text" id="mgmt-key" placeholder="e.g. OCtest" class="mgmt-input">
+            </div>
+            <div class="input-row">
+              <label for="mgmt-mode">Mode</label>
+              <select id="mgmt-mode">
+                <option value="fixed">Fixed</option>
+                <option value="time_based">Time-based</option>
+                <option value="usage_based" selected>Usage-based</option>
+              </select>
+            </div>
+            <div class="input-row-group">
+              <div class="input-row half">
+                <label for="mgmt-ttl">TTL (min)</label>
+                <input type="number" id="mgmt-ttl" min="1" value="30" class="mgmt-num">
+              </div>
+              <div class="input-row half">
+                <label for="mgmt-uses">Max Uses</label>
+                <input type="number" id="mgmt-uses" min="1" value="10" class="mgmt-num">
+              </div>
+            </div>
+            <div class="btn-group">
+              <button class="btn-sm" id="btn-save-url-config">💾 Save Config</button>
+              <button class="btn-danger" id="btn-force-delete">🗑 Delete URLs</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOG MANAGEMENT -->
+        <div class="url-mgmt-panel">
+          <div class="section-title">📋 Log Management</div>
+          <div class="log-mgmt-col">
+            <div class="input-row">
+              <label for="log-caller">Caller</label>
+              <div class="select-add-wrapper">
+                <select id="log-caller">
+                  <option value="all">All</option>
+                  <option value="OC">OC (OpenClaw)</option>
+                  <option value="CD">CD (OpenCode)</option>
+                </select>
+                <button class="btn-sm" id="btn-add-caller" title="Add New Caller">+</button>
+              </div>
+            </div>
+
+            <div id="add-caller-box" class="add-caller-box">
+              <input type="text" id="new-caller-input" placeholder="e.g. CA Cong an" class="mgmt-input">
+              <div class="btn-group">
+                <button class="btn-sm btn-success" id="btn-save-new-caller">💾 Save</button>
+                <button class="btn-sm btn-secondary" id="btn-cancel-caller">Cancel</button>
+              </div>
+            </div>
+
+            <div class="btn-group vertical">
+              <button class="btn-primary" id="btn-export-logs">💾 Export Logs (JSON)</button>
+              <button class="btn-danger" id="btn-clear-all-logs">🗑 Clear All Logs</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT (RIGHT) -->
+      <main class="dashboard-main">
+        <!-- SLOTS -->
+        <div class="slots-panel">
+          <div class="section-title-row">
+            <div class="section-title">Worker Slots</div>
+            <div class="pulse-indicator">
+              <span class="pulse-dot-green"></span>
+              <span class="pulse-label">Real-time Telemetry</span>
+            </div>
+          </div>
+          <div class="slots-row" id="slots-row">
+            <!-- Generated dynamically -->
+          </div>
+        </div>
+
+        <!-- JSON OUTPUT -->
+        <div class="json-panel">
+          <div class="section-title-row">
+            <div class="section-title">📤 JSON Output <small>(last job results)</small></div>
+            <button class="btn-sm btn-icon-only" id="btn-copy-json" title="Copy JSON">📋</button>
+          </div>
+          <textarea id="json-output" class="json-textarea" rows="8" readonly placeholder="Results will appear here..."></textarea>
+        </div>
+
+        <!-- SYSTEM LOG -->
+        <div class="log-panel">
+          <div class="section-title-row">
+            <div class="section-title">📋 System Log</div>
+            <div class="terminal-badge">bash</div>
+          </div>
+          <div id="system-log" class="system-log"></div>
+        </div>
+      </main>
+    </div>
+
+  </div>
+  <script src="hub.js"></script>
+</body>
+</html>

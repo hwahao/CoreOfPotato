@@ -1,0 +1,39 @@
+{
+  "port": 2809,
+  "host": "127.0.0.1",
+  "log_level": "INFO",
+  "job_accept_timeout": 10,
+  "job_result_timeout": 180,
+  "url_default_mode": "usage_based",
+  "url_default_max_uses": 10,
+  "url_default_ttl_minutes": 30,
+  "log_retention_days": 3,
+  "default_urls": {
+    "grok": "https://grok.com",
+    "gemini": "https://gemini.google.com/app",
+    "chatgpt": "https://chatgpt.com"
+  },
+  "workers": {
+    "grok": 3,
+    "gemini": 1,
+    "chatgpt": 2
+  },
+  "caller_map": {
+    "OC": "OpenClaw",
+    "CD": "OpenCode"
+  },
+  "browser": {
+    "executable_path": "",
+    "show_browser_window": true,
+    "user_data_dir": "./data/browser_profiles",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    }
+  },
+  "security": {
+    "admin_token": "admin-token-change-me",
+    "cors_origins": ["*"],
+    "require_auth": false
+  }
+}
