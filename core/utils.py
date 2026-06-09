@@ -2,6 +2,7 @@
 CoreNexus v1.0.0 — Utility helpers
 NOTE: logging uses stderr so stdout stays clean for Native Messaging protocol.
 """
+from __future__ import annotations
 
 import logging
 import os
