@@ -6,39 +6,26 @@ This document provides a quick step-by-step guide to installing, running, and us
 
 ## 📋 System Prerequisites
 * **Python 3.9+** must be installed on your machine.
-* **CloakBrowser** (or a stealth-focused Chromium instance) is highly recommended for actual usage to successfully bypass strict anti-bot protections.
-  * *Note: Playwright's default Chromium will be downloaded by the setup script as a fallback, but it might get blocked by Grok/ChatGPT's Cloudflare checks.*
 
 ---
 
 ## 🛠️ Installation & Execution (3 Simple Steps)
 
-### **Step 1: Run the Automated Setup Script & Configure CloakBrowser**
+### **Step 1: Run the Automated Setup Script**
 1. Open your terminal in the project root directory and run:
    ```bash
    chmod +x setup.sh
    ./setup.sh
    ```
-   *This sets up the virtual environment (`venv`), installs dependencies, fetches standard Chromium as a fallback, and copies the default configuration.*
-
-2. **Configure CloakBrowser path:**
-   * Open `config.json` in your editor.
-   * Under the `"browser"` section, set `"executable_path"` to the absolute path of your **CloakBrowser** binary:
-     ```json
-     "browser": {
-       "executable_path": "/path/to/your/cloakbrowser",
-       "show_browser_window": true,
-       ...
-     }
-     ```
+   *This sets up the virtual environment (`venv`), installs dependencies (including `cloakbrowser`), automatically downloads the stealth Chromium binary, and generates/configures your `config.json` with the correct browser executable path.*
 
 ---
 
-### **Step 2: Configure & Log In to AI Accounts**
+### **Step 2: Log In to AI Accounts**
 
 1. **Launch the Core of Potato server:**
    ```bash
-   python3 -m core
+   ./venv/bin/python3 -m core
    ```
    * *By default, the server binds to port `2809`.*
    * *Core of Potato starts in **headed mode** (browser windows visible) so you can easily interact with it.*
