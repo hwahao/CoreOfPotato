@@ -27,9 +27,9 @@ playwright install chromium
 if [ ! -f "config.json" ]; then
     echo "Copying config.example.json to config.json..."
     cp config.example.json config.json
-    echo "Please update config.json with your specific configuration."
-else
-    echo "config.json already exists. Skipping copy."
 fi
 
-echo "Setup complete! You can now run CoreNexus."
+echo "Configuring CloakBrowser..."
+python3 setup_cloak.py
+
+echo "Setup complete! You can now run Core of Potato."
