@@ -584,7 +584,6 @@ async def test_5_endurance(session):
     BATCH_INTERVAL = 5
     MODELS = ["grok", "gemini", "chatgpt"]
 
-    results = []
     batch_count = 0
     t_start = time.monotonic()
 
@@ -846,7 +845,7 @@ async def main():
         # Pre-flight: check server health
         if not await check_server_health(session):
             print(f"\n  {Colors.RED}[ERROR] Core of Potato is not running at {BASE_URL}{Colors.RESET}")
-            print(f"  Start the server first:  python3 -m core")
+            print("  Start the server first:  python3 -m core")
             sys.exit(1)
 
         log_info(f"Server is healthy at {BASE_URL}")

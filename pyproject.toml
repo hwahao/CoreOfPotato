@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "core-of-potato"
-version = "1.0.0"
+version = "1.0.1"
 description = "An open-source automation framework and API gateway with CloakBrowser integration."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -32,3 +32,4 @@ target-version = "py39"
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+addopts = "--ignore=tests/load_test.py"
