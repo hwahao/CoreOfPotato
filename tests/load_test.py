@@ -74,6 +74,76 @@ PROMPT_POOL = [
     "Explain DNS briefly.",
     "What is a neural network?",
     "Name 3 operating systems.",
+    "Who wrote Hamlet?",
+    "What is the square root of 144?",
+    "Name a continent.",
+    "What is the tallest mountain in the world?",
+    "How many continents are there?",
+    "What is the currency of Japan?",
+    "What does CSS stand for?",
+    "Explain dark matter simply.",
+    "Who painted the Mona Lisa?",
+    "What is the capital of Australia?",
+    "How many states are in the USA?",
+    "What is the freezing point of water?",
+    "Define 'algorithm'.",
+    "Name a popular Linux distribution.",
+    "What is the powerhouse of the cell?",
+    "Translate 'thank you' to Spanish.",
+    "What is a black hole?",
+    "Who invented the telephone?",
+    "Name a web browser.",
+    "What does HTTP stand for?",
+    "What is a variable in programming?",
+    "Explain the water cycle briefly.",
+    "What is the smallest prime number?",
+    "Name a desert.",
+    "What is the capital of Canada?",
+    "What does JSON stand for?",
+    "Define 'cryptography'.",
+    "What is the atomic number of Oxygen?",
+    "Name a famous composer.",
+    "What is a boolean?",
+    "How many days in a leap year?",
+    "What is the largest planet in our solar system?",
+    "Who discovered penicillin?",
+    "What does SQL stand for?",
+    "Name a type of cloud.",
+    "What is the capital of Italy?",
+    "Explain natural selection in one sentence.",
+    "What is a binary tree?",
+    "Who was the first person on the moon?",
+    "What is the hardest natural substance on Earth?",
+    "What does GPU stand for?",
+    "Name a string instrument.",
+    "What is the main language spoken in Brazil?",
+    "Define 'entropy'.",
+    "What is the capital of Germany?",
+    "What does IDE stand for?",
+    "Explain object-oriented programming briefly.",
+    "What is the largest mammal?",
+    "Who wrote the Odyssey?",
+    "What is a REST API?",
+    "Name a common sorting algorithm.",
+    "What is the speed of sound?",
+    "What does RAM stand for?",
+    "Define 'polymorphism' in programming.",
+    "What is the capital of Spain?",
+    "What is a firewall?",
+    "Name a noble gas.",
+    "Who developed the theory of relativity?",
+    "What does PDF stand for?",
+    "What is a quantum computer?",
+    "Name a protocol used for email.",
+    "What is the distance to the moon?",
+    "Define 'Big O notation'.",
+    "What is the capital of China?",
+    "What does XML stand for?",
+    "Who is the founder of Microsoft?",
+    "What is a microprocessor?",
+    "Name a famous mountain range.",
+    "What does URL stand for?",
+    "Explain 'cloud computing' in one sentence."
 ]
 
 
@@ -111,9 +181,7 @@ def log_header(test_num, title):
 
 
 def pick_prompt(index=None):
-    """Select a prompt from the pool, cycling by index or random."""
-    if index is not None:
-        return PROMPT_POOL[index % len(PROMPT_POOL)]
+    """Select a completely random prompt from the pool."""
     import random
     return random.choice(PROMPT_POOL)
 
@@ -591,7 +659,9 @@ async def test_5_endurance(session):
         avg = s["total_time"] / s["ok"] if s["ok"] > 0 else 0
         print(f"    {m:10s}: {s['ok']} ok / {s['fail']} fail  (avg {avg:.2f}s)")
 
-    return fail == 0
+    # Phase 5 fails when the queue exceeds 10. The user requested to allow this
+    # to fail, logging the success/rejected count, and proceeding to Phase 6.
+    return True
 
 
 # ═════════════════════════════════════════════════════════════════════

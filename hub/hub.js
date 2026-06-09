@@ -15,6 +15,7 @@ let pollInterval = null;
 let logPollInterval = null;
 let lastLogTime = 0;
 let currentCallerMap = {};
+let lastFetchedJsonText = "";
 
 function log(msg, type = "info") {
   const el = $("system-log");
@@ -30,14 +31,14 @@ function log(msg, type = "info") {
 
 function updateConnBadge(connected) {
   state.connected = connected;
-  const badge = $("conn-badge");
+  const dot = $("conn-dot");
   const text = $("conn-text");
-  if (!badge || !text) return;
+  if (!dot || !text) return;
   if (connected) {
-    badge.classList.add("connected");
-    text.textContent = "Server Connected";
+    dot.className = "w-2 h-2 rounded-full bg-green-500";
+    text.textContent = "Connected";
   } else {
-    badge.classList.remove("connected");
+    dot.className = "w-2 h-2 rounded-full bg-gray-400";
     text.textContent = "Disconnected";
   }
 }
@@ -48,35 +49,33 @@ function initSlotsDOM(slotsData) {
   
   slotsData.forEach(slot => {
     let card = $(`slot-${slot.id}`);
+    const statText = slot.status === "idle" ? "Ready" : slot.status === "busy" ? (slot.currentJob || "Running") : "Offline";
+    const driverName = slot.driver || "Worker";
+    
+    let dotColor = "bg-gray-400";
+    if (slot.status === "idle") dotColor = "bg-green-500";
+    if (slot.status === "busy") dotColor = "bg-yellow-500";
+    if (slot.status === "error") dotColor = "bg-red-500";
+
     if (!card) {
       card = document.createElement("div");
-      card.className = "slot-card offline";
       card.id = `slot-${slot.id}`;
-      
-      const driverClass = (slot.driver || "").toLowerCase();
-      
+      card.className = `border border-outline-variant rounded p-sm flex flex-col justify-between bg-surface-container-low`;
       card.innerHTML = `
-        <div class="slot-header">
-          <div class="slot-meta">
-            <span class="slot-dot offline"></span>
-            <span class="slot-id-badge">#${slot.id}</span>
-          </div>
-          <span class="slot-driver-badge driver-${driverClass}">${slot.driver}</span>
+        <div class="flex justify-between items-start">
+          <span class="font-label-md text-label-md font-bold">WRK-${slot.id}</span>
+          <div class="w-2 h-2 rounded-full status-dot"></div>
         </div>
-        <div class="slot-status" id="slot-${slot.id}-status">Offline</div>
+        <span class="font-label-sm text-label-sm text-on-surface-variant mt-sm slot-driver"></span>
       `;
       container.appendChild(card);
     }
     
-    const dot = card.querySelector(".slot-dot");
-    const statusEl = $(`slot-${slot.id}-status`);
+    const dot = card.querySelector(".status-dot");
+    const driverEl = card.querySelector(".slot-driver");
     
-    card.className = "slot-card " + slot.status;
-    if (dot) dot.className = "slot-dot " + slot.status;
-    
-    statusEl.textContent = slot.status === "idle" ? "Idle — Ready" :
-      slot.status === "busy" ? (slot.currentJob || "Working...") :
-      slot.status;
+    if (dot) dot.className = `w-2 h-2 rounded-full status-dot ${dotColor}`;
+    if (driverEl) driverEl.textContent = `${driverName} (${statText})`;
   });
 
   const currentSlotIds = slotsData.map(s => `slot-${s.id}`);
@@ -110,7 +109,7 @@ async function fetchStatus() {
     state.slots = data.slots || [];
     state.queueCount = data.queue_count || 0;
     state.activeCount = data.active_count || 0;
-    state.uptime = data.uptime || 0;
+    state.uptime = data.uptime_seconds || data.uptime || 0;
     if (data.show_browser_window !== undefined) {
       state.show_browser_window = data.show_browser_window;
       const btn = $("btn-headless");
@@ -119,8 +118,8 @@ async function fetchStatus() {
     
     initSlotsDOM(state.slots);
     
-    $("sb-slots").textContent = `Slots: ${state.slots.filter(s => s.status !== 'offline').length}/${state.slots.length} online`;
-    $("sb-active").textContent = `Active: ${state.activeCount} (Queue: ${state.queueCount})`;
+    $("sb-slots").textContent = `${state.slots.filter(s => s.status !== 'offline').length}/${state.slots.length} online`;
+    $("sb-active").textContent = `${state.activeCount} (Queue: ${state.queueCount})`;
     $("sb-uptime").textContent = `Uptime: ${formatUptime(state.uptime)}`;
     
   } catch (err) {
@@ -155,7 +154,15 @@ async function toggleVisibility() {
       headers: { "Content-Type": "application/json" }
     });
     if (res.ok) {
-      $("btn-headless").textContent = `👁 Show Browser: ${state.show_browser_window ? "ON" : "OFF"}`;
+      const icon = $("btn-headless").querySelector('.material-symbols-outlined');
+      if (icon) {
+        icon.textContent = state.show_browser_window ? "visibility" : "visibility_off";
+        if (state.show_browser_window) {
+          $("btn-headless").classList.remove('text-primary');
+        } else {
+          $("btn-headless").classList.add('text-primary');
+        }
+      }
       log(`Browser window visibility set to ${state.show_browser_window}`, "info");
     } else {
       state.show_browser_window = !state.show_browser_window; 
@@ -343,6 +350,94 @@ function saveNewCaller() {
   });
 }
 
+function renderJSON(obj, container, isRoot = false) {
+  if (typeof obj === 'object' && obj !== null) {
+    const isArray = Array.isArray(obj);
+    const wrap = document.createElement('div');
+    wrap.className = 'json-node';
+    
+    for (let key in obj) {
+      const row = document.createElement('div');
+      row.className = 'json-row';
+      
+      const keySpan = document.createElement('span');
+      keySpan.className = 'json-key';
+      keySpan.textContent = (isArray ? '' : `"${key}": `);
+      
+      const val = obj[key];
+      if (typeof val === 'object' && val !== null) {
+        const toggle = document.createElement('span');
+        // By default, collapse if it's not the root to reduce redundant display
+        const shouldCollapse = !isRoot;
+        toggle.className = 'json-toggle' + (shouldCollapse ? ' collapsed' : '');
+        toggle.textContent = shouldCollapse ? '▶ ' : '▼ ';
+        
+        row.appendChild(toggle);
+        row.appendChild(keySpan);
+        
+        const preview = document.createElement('span');
+        preview.className = 'json-preview';
+        preview.textContent = Array.isArray(val) ? `[${val.length} items]` : '{...}';
+        if (!shouldCollapse) preview.style.display = 'none';
+        row.appendChild(preview);
+        
+        const children = document.createElement('div');
+        children.className = 'json-children';
+        if (shouldCollapse) children.style.display = 'none';
+        renderJSON(val, children, false);
+        
+        toggle.onclick = (e) => {
+          e.stopPropagation();
+          const isColl = children.style.display === 'none';
+          children.style.display = isColl ? 'block' : 'none';
+          preview.style.display = isColl ? 'none' : 'inline';
+          toggle.textContent = isColl ? '▼ ' : '▶ ';
+          toggle.classList.toggle('collapsed', !isColl);
+        };
+        preview.onclick = toggle.onclick;
+        
+        row.appendChild(children);
+      } else {
+        const valSpan = document.createElement('span');
+        const type = val === null ? 'null' : typeof val;
+        valSpan.className = 'json-val ' + type;
+        valSpan.textContent = type === 'string' ? `"${val}"` : val;
+        row.appendChild(keySpan);
+        row.appendChild(valSpan);
+      }
+      wrap.appendChild(row);
+    }
+    container.appendChild(wrap);
+  } else {
+    container.textContent = obj;
+  }
+}
+
+async function fetchAndRenderJsonLogs() {
+  const container = $("json-output");
+  const btn = $("btn-fetch-json");
+  if (!container || !btn) return;
+  
+  btn.textContent = "⏳ Loading...";
+  btn.disabled = true;
+  container.innerHTML = '<div class="json-placeholder">Fetching logs...</div>';
+  
+  try {
+    const res = await fetch("/api/logs/export");
+    if (!res.ok) throw new Error("Failed to fetch logs");
+    const data = await res.json();
+    lastFetchedJsonText = JSON.stringify(data, null, 2);
+    container.innerHTML = "";
+    renderJSON(data, container, true);
+  } catch (err) {
+    container.innerHTML = `<div class="json-placeholder" style="color:var(--red)">Error: ${err.message}</div>`;
+    lastFetchedJsonText = "";
+  } finally {
+    btn.textContent = "🔄 Load Logs";
+    btn.disabled = false;
+  }
+}
+
 function init() {
   $("btn-headless").addEventListener("click", toggleVisibility);
   $("btn-launch").addEventListener("click", applyConfig);
@@ -363,13 +458,18 @@ function init() {
   const btnCopy = $("btn-copy-json");
   if (btnCopy) {
     btnCopy.addEventListener("click", () => {
-      const txt = $("json-output").value;
+      const txt = lastFetchedJsonText;
       if (!txt) return;
       navigator.clipboard.writeText(txt).then(() => {
         btnCopy.textContent = "✅";
         setTimeout(() => { btnCopy.textContent = "📋"; }, 2000);
       });
     });
+  }
+
+  const btnFetchJson = $("btn-fetch-json");
+  if (btnFetchJson) {
+    btnFetchJson.addEventListener("click", fetchAndRenderJsonLogs);
   }
   
   if (pollInterval) clearInterval(pollInterval);
@@ -379,6 +479,44 @@ function init() {
   logPollInterval = setInterval(fetchLogs, 2000);
   
   fetchStatus();
+  initHelpSystem();
+}
+
+const HELP_TEXTS = {
+  workers: "Configure the number of active browser tabs (Workers) for Grok, Gemini, and ChatGPT. Clicking \"Launch Fleet\" will dynamically open new tabs or safely close idle ones in the background to match your configured limits.",
+  slots: "Real-time monitoring of all active Chromium browser slots. Displays the current state of each worker: Idle (ready for tasks), Busy (currently generating a response), or Offline.",
+  default_urls: "Set the default landing web URLs for each AI platform. Saving these updates the config.json file and automatically navigates the active browser tabs to the new URLs.",
+  url_mgmt: "Manage conversation session URLs mapped to NaModu keys (e.g. OCtest). Configure cache expiry rules: Fixed (permanent), Time-based (expires after N minutes), or Usage-based (expires after N uses). Use Force Delete to manually discard a session.",
+  logs: "Manage registered caller prefixes and filter system log exports. View a real-time console of background system events and inspect the raw JSON output payload of the most recently completed job."
+};
+
+function initHelpSystem() {
+  const modal = $("help-modal");
+  const content = $("help-content");
+  const btnClose = $("btn-close-help");
+  if (!modal || !content || !btnClose) return;
+
+  const triggers = document.querySelectorAll(".help-trigger");
+  triggers.forEach(trigger => {
+    trigger.addEventListener("click", (e) => {
+      const key = trigger.getAttribute("data-help");
+      if (HELP_TEXTS[key]) {
+        content.textContent = HELP_TEXTS[key];
+        modal.classList.remove("hidden");
+      }
+    });
+  });
+
+  btnClose.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", init);
+

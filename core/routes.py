@@ -47,7 +47,7 @@ class APIRoutes:
         return web.json_response(
             {
                 "status": "ok",
-                "version": "1.0.0",
+                "version": "1.0.1",
                 "uptime_seconds": int(time.time() - self.server._start_time),
                 "jobs_today": self.server._jobs_today,
                 "adapter": "CoreNexus",
@@ -63,10 +63,12 @@ class APIRoutes:
         return web.json_response(
             {
                 "status": "ok",
-                "version": "1.0.0",
+                "version": "1.0.1",
                 "port": self.config.get("port", 2809),
                 "uptime_seconds": int(time.time() - self.server._start_time),
                 "jobs_today": self.server._jobs_today,
+                "active_count": self.browser.active_count if hasattr(self.browser, "active_count") else 0,
+                "queue_count": self.browser.queue_count if hasattr(self.browser, "queue_count") else 0,
                 "workers": self.config.get("workers", {}),
                 "default_urls": self.config.get("default_urls", {}),
                 "slots": slots,

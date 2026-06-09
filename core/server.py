@@ -398,7 +398,7 @@ class CNAdapterServer:
         port = self.config.get("port", 2809)
         host = self.config.get("host", "0.0.0.0")
 
-        logger.info("Starting Core of Potato 1.0.0 Server")
+        logger.info("Starting Core of Potato 1.0.1 Server")
 
         await self.browser.start()
 
@@ -418,7 +418,7 @@ class CNAdapterServer:
         await site.start()
 
         logger.info("=" * 50)
-        logger.info("  Core of Potato v1.0.0 — Running")
+        logger.info("  Core of Potato v1.0.1 — Running")
         logger.info(f"  PID       : {os.getpid()}")
         logger.info(f"  REST API  : http://{host}:{port}/api/")
         logger.info(f"  OpenAI    : http://{host}:{port}/v1/chat/completions")
@@ -436,7 +436,7 @@ class CNAdapterServer:
             await asyncio.sleep(3600)
 
 def main():
-    logger.info(f"Core of Potato v1.0.0 starting — {now_iso()}")
+    logger.info(f"Core of Potato v1.0.1 starting — {now_iso()}")
     server = CNAdapterServer()
     try:
         asyncio.run(server.start())

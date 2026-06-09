@@ -1,186 +1,366 @@
 <!DOCTYPE html>
-<html>
+<html class="light" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>02809-Core of Potato v1.0.0</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Core of Potato - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#5e4700",
+                        "inverse-surface": "#213145",
+                        "tertiary-container": "#70c2ff",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-high": "#dce9ff",
+                        "secondary": "#1d4ed8",
+                        "secondary-container": "#4069f2",
+                        "primary": "#775a00",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#f3bf32",
+                        "tertiary": "#006495",
+                        "on-tertiary-container": "#004f76",
+                        "primary-fixed": "#ffdf99",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-fixed": "#001551",
+                        "surface": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#807661",
+                        "on-tertiary-fixed": "#001e30",
+                        "tertiary-fixed-dim": "#8fcdff",
+                        "on-tertiary-fixed-variant": "#004b71",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed": "#251a00",
+                        "secondary-fixed": "#dce1ff",
+                        "surface-tint": "#775a00",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#e5eeff",
+                        "inverse-primary": "#f3bf32",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b7c4ff",
+                        "outline-variant": "#d2c5ad",
+                        "tertiary-fixed": "#cbe6ff",
+                        "background": "#f8f9ff",
+                        "on-primary-fixed-variant": "#5a4300",
+                        "primary-container": "#e6b325",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#fffbff",
+                        "on-surface-variant": "#4e4634",
+                        "on-secondary-fixed-variant": "#0039b5",
+                        "surface-bright": "#f8f9ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .bento-card {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.5rem;
+            padding: 24px;
+            transition: border-color 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: #775a00;
+        }
+        .input-field {
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.125rem;
+            padding: 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #0b1c30;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .input-field:focus {
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2);
+        }
+        .btn-primary {
+            background-color: #e6b325;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 0.125rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #f3bf32;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #0b1c30;
+            border: 1px solid #E2E8F0;
+            padding: 8px 16px;
+            border-radius: 0.125rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .btn-secondary:hover {
+            border-color: #1d4ed8;
+            color: #1d4ed8;
+        }
+        .log-area {
+            background-color: #1E293B;
+            color: #E2E8F0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            padding: 16px;
+            border-radius: 0.25rem;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry { margin-bottom: 4px; }
+        .log-time { color: #8fcdff; margin-right: 8px; }
+        .log-info { color: #cbe6ff; }
+        .log-warn { color: #f3bf32; }
+        .log-error { color: #ffdad6; }
+    </style>
 </head>
-<body>
-  <div class="hub-layout">
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-on-background w-full h-16 sticky top-0 z-50 border-b border-outline-variant dark:border-outline flex items-center justify-between px-lg max-w-full">
+<div class="flex items-center gap-md">
+<img alt="Core of Potato Logo" class="w-10 h-10 rounded" src="data:image/png;base64,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"/>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed font-bold tracking-tight">Core of Potato</h1>
+</div>
 
-    <!-- HEADER -->
-    <div class="hub-header">
-      <div class="hub-brand">
-        <span class="hub-icon">⚙️</span>
-        <div class="hub-title-wrapper">
-          <h1 class="hub-title">02809-Core of Potato</h1>
-          <span class="hub-version">v1.0.0</span>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors" id="btn-headless">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+<div class="bg-surface-container-high px-sm py-xs rounded-full flex items-center gap-xs text-label-sm font-label-sm" id="conn-badge">
+<div id="conn-dot" class="w-2 h-2 rounded-full bg-primary-container"></div>
+                <span id="conn-text">Connected</span>
+            </div>
+<div class="text-label-sm font-label-sm text-on-surface-variant" id="sb-uptime">
+                Up: 14d 2h 45m
+            </div>
+
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="flex-1 p-lg container mx-auto max-w-7xl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Launch Workers Section -->
+<div class="md:col-span-4 bento-card flex flex-col gap-md">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm cursor-pointer help-trigger hover:opacity-80 transition-opacity select-none" data-help="workers">
+<span class="material-symbols-outlined text-primary">rocket_launch</span>
+                    Launch Workers
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">help</span>
+                </h2>
+<div class="flex flex-col gap-sm">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="cfg-grok">Grok Instances</label>
+<input class="input-field" id="cfg-grok" min="0" type="number" value="3"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="cfg-gemini">Gemini Instances</label>
+<input class="input-field" id="cfg-gemini" min="0" type="number" value="1"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="cfg-chatgpt">ChatGPT Instances</label>
+<input class="input-field" id="cfg-chatgpt" min="0" type="number" value="2"/>
+</div>
+</div>
+<button class="btn-primary mt-auto w-full" id="btn-launch">Launch Fleet</button>
+</div>
+<!-- Worker Slots Section -->
+<div class="md:col-span-8 bento-card flex flex-col gap-md">
+<div class="flex justify-between items-center mb-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm cursor-pointer help-trigger hover:opacity-80 transition-opacity select-none" data-help="slots">
+<span class="material-symbols-outlined text-primary">memory</span>
+                        Worker Slots
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">help</span>
+                    </h2>
+<div class="flex gap-md font-label-sm text-label-sm bg-surface-container py-xs px-sm rounded">
+<span class="text-on-surface-variant">Total: <span class="font-bold text-on-surface" id="sb-slots">—</span></span>
+<span class="text-on-surface-variant">Active: <span class="font-bold text-primary" id="sb-active">—</span></span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md flex-1" id="slots-row">
+<!-- dynamic content generated by hub.js -->
+</div>
+</div>
+<!-- Default URLs Section -->
+<div class="md:col-span-6 bento-card flex flex-col gap-md">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm cursor-pointer help-trigger hover:opacity-80 transition-opacity select-none" data-help="default_urls">
+<span class="material-symbols-outlined text-primary">link</span>
+                    Default URLs
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">help</span>
+                </h2>
+<div class="flex flex-col gap-sm">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="url-grok">Grok Endpoint</label>
+<input class="input-field" id="url-grok" type="text" value="https://grok.com"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="url-gemini">Gemini Endpoint</label>
+<input class="input-field" id="url-gemini" type="text" value="https://gemini.google.com/app"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="url-chatgpt">ChatGPT Endpoint</label>
+<input class="input-field" id="url-chatgpt" type="text" value="https://chatgpt.com"/>
+</div>
+</div>
+<button class="btn-secondary mt-auto self-start" id="btn-save-urls">Save Defaults</button>
+</div>
+<!-- URL Management Section -->
+<div class="md:col-span-6 bento-card flex flex-col gap-md">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm cursor-pointer help-trigger hover:opacity-80 transition-opacity select-none" data-help="url_mgmt">
+<span class="material-symbols-outlined text-primary">settings_applications</span>
+                    URL Management
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">help</span>
+                </h2>
+<div class="grid grid-cols-2 gap-sm">
+<div class="col-span-2">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="mgmt-key">Module Key</label>
+<input class="input-field" id="mgmt-key" placeholder="e.g. OCtest" type="text"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="mgmt-mode">Mode</label>
+<select class="input-field bg-white" id="mgmt-mode">
+<option value="fixed">Fixed</option>
+<option value="time_based">Time-based</option>
+<option value="usage_based" selected>Usage-based</option>
+</select>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="mgmt-ttl">TTL (m)</label>
+<input class="input-field" id="mgmt-ttl" type="number" value="30"/>
+</div>
+<div class="col-span-2">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="mgmt-uses">Max Uses (0 = unlimited)</label>
+<input class="input-field" id="mgmt-uses" type="number" value="10"/>
+</div>
+</div>
+<div class="flex gap-sm mt-auto">
+<button class="btn-primary flex-1" id="btn-save-url-config">Save Config</button>
+<button class="btn-secondary border-error text-error hover:bg-error-container hover:text-on-error-container hover:border-error-container" id="btn-force-delete">Force Delete</button>
+</div>
+</div>
+<!-- System Logs & Data Management Section -->
+<div class="md:col-span-12 bento-card flex flex-col gap-md">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md mb-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm cursor-pointer help-trigger hover:opacity-80 transition-opacity select-none" data-help="logs">
+<span class="material-symbols-outlined text-primary">terminal</span>
+                        System Logs &amp; Data
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">help</span>
+                    </h2>
+<div class="flex flex-wrap items-center gap-sm w-full md:w-auto">
+<select class="input-field w-auto min-w-[150px]" id="log-caller">
+<option value="all">All Callers</option>
+<option value="OC">OC</option>
+<option value="CD">CD</option>
+</select>
+<button class="btn-secondary" id="btn-add-caller"><span class="material-symbols-outlined text-[18px] align-middle mr-xs">add</span>Add Caller</button>
+<button class="btn-secondary" id="btn-export-logs"><span class="material-symbols-outlined text-[18px] align-middle mr-xs">download</span>Export</button>
+<button class="btn-secondary border-error text-error" id="btn-clear-all-logs"><span class="material-symbols-outlined text-[18px] align-middle mr-xs">delete</span>Clear</button>
+</div>
+</div>
+<!-- Hidden Add Caller Box -->
+<div class="hidden bg-surface-container p-md rounded border border-outline-variant mb-md flex items-end gap-sm" id="add-caller-box">
+<div class="flex-1">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs" for="new-caller-input">New Caller ID</label>
+<input class="input-field" id="new-caller-input" placeholder="Enter Caller ID" type="text"/>
+</div>
+<button class="btn-primary" id="btn-save-new-caller">Save</button>
+<button class="btn-secondary" id="btn-cancel-caller">Cancel</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md h-[400px]">
+<!-- Logs -->
+<div class="log-area h-full flex flex-col" id="system-log">
+</div>
+<!-- JSON Viewer -->
+<div class="flex flex-col h-full border border-outline-variant rounded bg-surface-container-lowest">
+<div class="flex justify-between items-center p-sm border-b border-outline-variant bg-surface-container-low">
+<span class="font-label-md text-label-md font-bold">JSON Payload Viewer</span>
+<div class="flex gap-sm">
+<button class="btn-secondary py-xs px-sm text-xs" id="btn-fetch-json">Fetch Current</button>
+<button class="btn-secondary py-xs px-sm text-xs" id="btn-copy-json"><span class="material-symbols-outlined text-[14px] align-middle">content_copy</span></button>
+</div>
+</div>
+<div class="p-sm font-label-sm text-label-sm text-on-surface overflow-auto flex-1 whitespace-pre" id="json-output">
+Click 'Fetch Current' to load.
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Help Modal -->
+<div id="help-modal" class="hidden fixed inset-0 z-[100] bg-black bg-opacity-50 flex items-center justify-center p-md">
+    <div class="bg-surface text-on-surface rounded-lg p-lg max-w-md w-full border border-outline-variant shadow-lg flex flex-col gap-md">
+        <div class="flex justify-between items-center">
+            <h3 id="help-title" class="font-headline-md text-headline-md text-primary font-bold">Help</h3>
+            <button id="btn-close-help" class="text-on-surface-variant hover:text-error transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
         </div>
-      </div>
-      <div class="header-controls">
-        <button id="btn-headless" class="btn-sm">👁 Show Browser: ON</button>
-        <div id="conn-badge" class="conn-badge">
-          <span id="conn-dot" class="conn-dot"></span>
-          <span id="conn-text">Disconnected</span>
+        <div id="help-content" class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            <!-- Content injected via JS -->
         </div>
-      </div>
     </div>
-
-    <div class="dashboard-grid">
-      <!-- SIDEBAR (LEFT) -->
-      <aside class="dashboard-sidebar">
-        <!-- STATUS BAR -->
-        <div class="status-bar">
-          <div class="sb-item"><span class="sb-label">Slots</span><span id="sb-slots" class="sb-value">—</span></div>
-          <div class="sb-item"><span class="sb-label">Active</span><span id="sb-active" class="sb-value">0/0</span></div>
-          <div class="sb-item"><span class="sb-label">Uptime</span><span id="sb-uptime" class="sb-value">—</span></div>
-        </div>
-
-        <!-- WORKER CONFIG -->
-        <div class="config-panel">
-          <div class="section-title">⚙️ Launch Workers</div>
-          <div class="config-controls">
-            <div class="control-group">
-              <label for="cfg-grok">Grok</label>
-              <input type="number" id="cfg-grok" min="0" max="10" value="3">
-            </div>
-            <div class="control-group">
-              <label for="cfg-gemini">Gemini</label>
-              <input type="number" id="cfg-gemini" min="0" max="10" value="1">
-            </div>
-            <div class="control-group">
-              <label for="cfg-chatgpt">ChatGPT</label>
-              <input type="number" id="cfg-chatgpt" min="0" max="10" value="2">
-            </div>
-            <button class="btn-primary" id="btn-launch">🚀 Load Workers</button>
-          </div>
-        </div>
-
-        <!-- DEFAULT URL EDITOR -->
-        <div class="url-editor-panel">
-          <div class="section-title">🔗 Default URLs</div>
-          <div class="url-editor-col">
-            <div class="input-row">
-              <label for="url-grok">Grok</label>
-              <input type="text" id="url-grok" class="url-input" placeholder="https://grok.com" value="https://grok.com">
-            </div>
-            <div class="input-row">
-              <label for="url-gemini">Gemini</label>
-              <input type="text" id="url-gemini" class="url-input" placeholder="https://gemini.google.com/app" value="https://gemini.google.com/app">
-            </div>
-            <div class="input-row">
-              <label for="url-chatgpt">ChatGPT</label>
-              <input type="text" id="url-chatgpt" class="url-input" placeholder="https://chatgpt.com" value="https://chatgpt.com">
-            </div>
-            <button class="btn-sm" id="btn-save-urls">💾 Save Default URLs</button>
-          </div>
-        </div>
-
-        <!-- URL MANAGEMENT -->
-        <div class="url-mgmt-panel">
-          <div class="section-title">🗑 URL Management <small>(per Job Key)</small></div>
-          <div class="url-mgmt-col">
-            <div class="input-row">
-              <label for="mgmt-key">Module Key</label>
-              <input type="text" id="mgmt-key" placeholder="e.g. OCtest" class="mgmt-input">
-            </div>
-            <div class="input-row">
-              <label for="mgmt-mode">Mode</label>
-              <select id="mgmt-mode">
-                <option value="fixed">Fixed</option>
-                <option value="time_based">Time-based</option>
-                <option value="usage_based" selected>Usage-based</option>
-              </select>
-            </div>
-            <div class="input-row-group">
-              <div class="input-row half">
-                <label for="mgmt-ttl">TTL (min)</label>
-                <input type="number" id="mgmt-ttl" min="1" value="30" class="mgmt-num">
-              </div>
-              <div class="input-row half">
-                <label for="mgmt-uses">Max Uses</label>
-                <input type="number" id="mgmt-uses" min="1" value="10" class="mgmt-num">
-              </div>
-            </div>
-            <div class="btn-group">
-              <button class="btn-sm" id="btn-save-url-config">💾 Save Config</button>
-              <button class="btn-danger" id="btn-force-delete">🗑 Delete URLs</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- LOG MANAGEMENT -->
-        <div class="url-mgmt-panel">
-          <div class="section-title">📋 Log Management</div>
-          <div class="log-mgmt-col">
-            <div class="input-row">
-              <label for="log-caller">Caller</label>
-              <div class="select-add-wrapper">
-                <select id="log-caller">
-                  <option value="all">All</option>
-                  <option value="OC">OC (OpenClaw)</option>
-                  <option value="CD">CD (OpenCode)</option>
-                </select>
-                <button class="btn-sm" id="btn-add-caller" title="Add New Caller">+</button>
-              </div>
-            </div>
-
-            <div id="add-caller-box" class="add-caller-box">
-              <input type="text" id="new-caller-input" placeholder="e.g. CA Cong an" class="mgmt-input">
-              <div class="btn-group">
-                <button class="btn-sm btn-success" id="btn-save-new-caller">💾 Save</button>
-                <button class="btn-sm btn-secondary" id="btn-cancel-caller">Cancel</button>
-              </div>
-            </div>
-
-            <div class="btn-group vertical">
-              <button class="btn-primary" id="btn-export-logs">💾 Export Logs (JSON)</button>
-              <button class="btn-danger" id="btn-clear-all-logs">🗑 Clear All Logs</button>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- MAIN CONTENT (RIGHT) -->
-      <main class="dashboard-main">
-        <!-- SLOTS -->
-        <div class="slots-panel">
-          <div class="section-title-row">
-            <div class="section-title">Worker Slots</div>
-            <div class="pulse-indicator">
-              <span class="pulse-dot-green"></span>
-              <span class="pulse-label">Real-time Telemetry</span>
-            </div>
-          </div>
-          <div class="slots-row" id="slots-row">
-            <!-- Generated dynamically -->
-          </div>
-        </div>
-
-        <!-- JSON OUTPUT -->
-        <div class="json-panel">
-          <div class="section-title-row">
-            <div class="section-title">📤 JSON Output <small>(last job results)</small></div>
-            <button class="btn-sm btn-icon-only" id="btn-copy-json" title="Copy JSON">📋</button>
-          </div>
-          <textarea id="json-output" class="json-textarea" rows="8" readonly placeholder="Results will appear here..."></textarea>
-        </div>
-
-        <!-- SYSTEM LOG -->
-        <div class="log-panel">
-          <div class="section-title-row">
-            <div class="section-title">📋 System Log</div>
-            <div class="terminal-badge">bash</div>
-          </div>
-          <div id="system-log" class="system-log"></div>
-        </div>
-      </main>
-    </div>
-
-  </div>
-  <script src="hub.js"></script>
+</div>
+<script src="hub.js"></script>
 </body>
 </html>

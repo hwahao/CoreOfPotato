@@ -1,8 +1,6 @@
 # Core of Potato
 
-**Core of Potato v1.0.0** is an open-source, lightweight API gateway and browser automation framework designed to run local web-based AI models in parallel browser slots. It bridges the gap between structured API requests (e.g., OpenAI-compatible clients, LangChain, or simple HTTP requests) and free browser-based AI platforms (Grok, Gemini, ChatGPT) using advanced session multiplexing.
-
-Starting with `v1.0.0`, the system has been migrated to **Playwright** and is configured to run on stealth-focused Chromium instances (such as CloakBrowser), bypassing complex browser extension architectures and native messaging protocols.
+**Core of Potato v1.0.1** is an open-source, lightweight API gateway and browser automation framework designed to run local web-based AI models in parallel browser slots. It bridges the gap between structured API requests (e.g., OpenAI-compatible clients, LangChain, or simple HTTP requests) and free browser-based AI platforms (Grok, Gemini, ChatGPT) using advanced session multiplexing.
 
 ---
 
@@ -235,7 +233,7 @@ All administrative endpoints (marked with 🔑) require authentication. Clients 
   ```json
   {
     "status": "ok",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "uptime_seconds": 120,
     "jobs_today": 5,
     "adapter": "Core of Potato",
